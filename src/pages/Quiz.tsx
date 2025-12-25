@@ -35,7 +35,7 @@ const Quiz = () => {
     }
 
     if (!currentPlan) {
-      navigate('/create-learning-plan');
+      navigate('/learning-plan');
       return;
     }
 
