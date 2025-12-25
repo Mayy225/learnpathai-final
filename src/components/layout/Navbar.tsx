@@ -90,7 +90,7 @@ const Navbar = () => {
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={() => navigate('/learning-plan')}
+                onClick={() => navigate('/LearningPlanCreation')}
                 className="flex items-center gap-2"
               >
                 <User className="h-4 w-4" />
