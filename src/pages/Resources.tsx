@@ -33,7 +33,7 @@ const Resources = () => {
 
     const currentPlan = getCurrentPlan();
     if (!currentPlan) {
-      navigate('/create-learning-plan');
+      navigate('/learning-plan');
       return;
     }
 
