@@ -75,7 +75,7 @@ const PaymentSuccess = () => {
                 </div>
               </div>
               <Button 
-                onClick={() => navigate('/create-learning-plan')}
+                onClick={() => navigate('/learning-plan')}
                 className="bg-gradient-to-r from-[#FEC6A1] to-[#FFDEE2] text-text-dark"
               >
                 Créer un plan d'apprentissage
