@@ -29,7 +29,7 @@ const PaymentSuccess = () => {
       
       // Rediriger vers la page de création de plan d'apprentissage après un court délai
       const redirectTimer = setTimeout(() => {
-        navigate('/create-learning-plan');
+        navigate('/learning-plan');
       }, 2000);
       
       setLoading(false);
