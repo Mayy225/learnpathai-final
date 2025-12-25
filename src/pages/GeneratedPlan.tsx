@@ -91,8 +91,13 @@ const GeneratedPlan = () => {
   }, [currentPlan]);
 
   // Si aucun plan n'existe, rediriger vers la création de plan
+  useEffect(() => {
+    if (!currentPlan) {
+      navigate('/learning-plan');
+    }
+  }, [currentPlan, navigate]);
+
   if (!currentPlan) {
-    navigate('/create-learning-plan');
     return null;
   }
 
