@@ -572,7 +572,7 @@ const LearningPlanCreation = () => {
               <h3 className="text-lg font-medium mb-4">Votre plan d'apprentissage actuel</h3>
               <div className="flex flex-wrap gap-3">
                 <Button 
-                  onClick={() => navigate('/create-learning-plan')}
+                  onClick={() => navigate('/learning-plan')}
                   className="flex items-center bg-gradient-to-r from-[#FEC6A1] to-[#FFDEE2] text-text-dark"
                 >
                   <FileText className="mr-2 h-4 w-4" />
