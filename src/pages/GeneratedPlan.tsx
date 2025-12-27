@@ -240,7 +240,7 @@ const GeneratedPlan = () => {
                 </Button>
                 
                 <Button 
-                  onClick={() => navigate('/create-learning-plan')}
+                  onClick={() => navigate('/learning-plan')}
                   className="flex items-center justify-center h-11 sm:h-12 w-full bg-gradient-to-r from-[#FEC6A1] to-[#FFDEE2] text-text-dark hover:shadow-md transition-all duration-200 text-sm sm:text-base"
                 >
                   <FileText className="mr-2 h-3.5 w-3.5 sm:h-4 sm:w-4" />
