@@ -18,9 +18,9 @@ const PricingPage = () => {
     console.log(`Redirection vers Stripe pour le plan ${plan} - ${billingPeriod}`);
     
     if (plan === 'mensuel') {
-      window.location.href = 'https://buy.stripe.com/test_5kQdR95qJfGHfJOeTtdUY02';
+      window.location.href = 'https://buy.stripe.com/28E8wP2exgKL416fXxdUY00';
     } else if (plan === 'annuel') {
-      window.location.href = 'https://buy.stripe.com/test_7sYcN55qJ667gNScLldUY03';
+      window.location.href = 'https://buy.stripe.com/28E00jbP7amnbty9z9dUY01';
     }
     
     // Note: The payment confirmation and status update happens in PaymentSuccess.tsx
