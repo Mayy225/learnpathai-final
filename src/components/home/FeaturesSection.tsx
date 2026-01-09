@@ -1,6 +1,6 @@
 
 import Transition from '../ui/Transition';
-import { Brain, Target, Clock, PenTool, BookOpen, Focus, MessageSquare } from 'lucide-react';
+import { Brain, Target, PenTool, BookOpen, Focus, MessageSquare } from 'lucide-react';
 
 const features = [
   {
@@ -14,12 +14,6 @@ const features = [
     title: 'Plans Personnalisés',
     description: 'Obtenez des plans d\'apprentissage sur mesure qui s\'adaptent à vos besoins et objectifs spécifiques.',
     gradient: 'from-orange-500 to-red-500'
-  },
-  {
-    icon: Clock,
-    title: 'Optimisation du Temps',
-    description: 'Gérez efficacement votre temps d\'étude avec des horaires d\'apprentissage optimisés.',
-    gradient: 'from-green-500 to-emerald-500'
   },
   {
     icon: PenTool,
