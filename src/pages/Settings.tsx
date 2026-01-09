@@ -12,7 +12,7 @@ const Settings = () => {
   const navigate = useNavigate();
 
   const handleCancelSubscription = () => {
-    window.open('https://billing.stripe.com/p/login/test_28E8wP2exgKL416fXxdUY00', '_blank');
+    window.open('https://billing.stripe.com/p/login/28E8wP2exgKL416fXxdUY00', '_blank');
   };
 
   if (!currentUser) {
