@@ -17,12 +17,6 @@ const steps = [
   },
   {
     number: '03',
-    title: 'Révisez et personnalisez',
-    description: 'Examinez votre plan d\'apprentissage et apportez des ajustements pour mieux correspondre à vos préférences.',
-    points: ['Capacités d\'édition complètes', 'Ajoutez ou supprimez des sections', 'Priorisez des domaines spécifiques']
-  },
-  {
-    number: '04',
     title: 'Commencez à apprendre efficacement',
     description: 'Suivez votre plan personnalisé et suivez votre progression pendant que vous apprenez et évoluez.',
     points: ['Guide étape par étape clair', 'Téléchargement en PDF', 'Revisitez et mettez à jour à tout moment']
