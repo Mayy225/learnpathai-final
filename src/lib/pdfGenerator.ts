@@ -139,8 +139,13 @@ export const generatePDF = (planData: PlanData): void => {
     doc.setFontSize(14);
     doc.setFont('helvetica', 'bold');
     doc.setTextColor(80, 50, 30);
-    doc.text(title, margin + 10, yPosition + 6);
-    yPosition += 18;
+    // Wrap le titre si trop long
+    const titleLines = doc.splitTextToSize(title, contentWidth - 15);
+    for (let i = 0; i < titleLines.length; i++) {
+      if (i > 0) checkNewPage(8);
+      doc.text(titleLines[i], margin + 10, yPosition + 6 + (i * 7));
+    }
+    yPosition += 12 + (titleLines.length - 1) * 7;
   };
 
   // Fonction pour ajouter un sous-titre
@@ -151,8 +156,13 @@ export const generatePDF = (planData: PlanData): void => {
     doc.setFontSize(11);
     doc.setFont('helvetica', 'bold');
     doc.setTextColor(200, 120, 80);
-    doc.text(title, margin, yPosition);
-    yPosition += 10;
+    // Wrap le sous-titre si trop long
+    const subTitleLines = doc.splitTextToSize(title, contentWidth - 5);
+    for (let i = 0; i < subTitleLines.length; i++) {
+      if (i > 0) checkNewPage(6);
+      doc.text(subTitleLines[i], margin, yPosition + (i * 6));
+    }
+    yPosition += 6 + (subTitleLines.length - 1) * 6;
   };
 
   // Fonction pour ajouter du texte normal
@@ -319,20 +329,27 @@ export const generatePDF = (planData: PlanData): void => {
         // Détecter les titres principaux (Semaine, Module, Partie, etc.)
         if (/^(Semaine|Module|Partie|Chapitre|Phase|Etape|Jour)\s*\d*/i.test(trimmedLine) ||
             /^\d+[\.\)]\s*[A-Z]/.test(trimmedLine)) {
-          checkNewPage(25);
+          doc.setFontSize(12);
+          doc.setFont('helvetica', 'bold');
+          
+          // Calculer la hauteur nécessaire pour le titre
+          const mainTitleLines = doc.splitTextToSize(trimmedLine, contentWidth - 10);
+          const boxHeight = 8 + (mainTitleLines.length * 6);
+          
+          checkNewPage(boxHeight + 15);
           yPosition += 8;
           
-          // Cadre coloré pour les titres principaux
+          // Cadre coloré pour les titres principaux (hauteur dynamique)
           doc.setFillColor(255, 245, 235);
           doc.setDrawColor(254, 198, 161);
           doc.setLineWidth(0.5);
-          doc.roundedRect(margin, yPosition - 6, contentWidth, 12, 2, 2, 'FD');
+          doc.roundedRect(margin, yPosition - 6, contentWidth, boxHeight, 2, 2, 'FD');
           
-          doc.setFontSize(12);
-          doc.setFont('helvetica', 'bold');
           doc.setTextColor(80, 50, 30);
-          doc.text(trimmedLine, margin + 5, yPosition + 2);
-          yPosition += 15;
+          for (let i = 0; i < mainTitleLines.length; i++) {
+            doc.text(mainTitleLines[i], margin + 5, yPosition + 2 + (i * 6));
+          }
+          yPosition += boxHeight + 5;
           currentWeekOrModule = trimmedLine;
           
         // Détecter les sous-titres (terminant par ":")
