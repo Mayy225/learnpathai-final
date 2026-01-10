@@ -105,165 +105,280 @@ export const generatePDF = (planData: PlanData): void => {
 
   const pageWidth = doc.internal.pageSize.getWidth();
   const pageHeight = doc.internal.pageSize.getHeight();
-  const margin = 20;
+  const margin = 25;
   const contentWidth = pageWidth - 2 * margin;
   let yPosition = margin;
 
   // Fonction pour ajouter une nouvelle page si nécessaire
-  const checkNewPage = (requiredSpace: number = 20) => {
-    if (yPosition + requiredSpace > pageHeight - margin) {
+  const checkNewPage = (requiredSpace: number = 25) => {
+    if (yPosition + requiredSpace > pageHeight - 30) {
       doc.addPage();
-      yPosition = margin;
+      yPosition = 30;
       return true;
     }
     return false;
   };
 
-  // Fonction pour ajouter du texte avec retour à la ligne automatique
-  const addText = (text: string, fontSize: number, isBold: boolean = false, color: [number, number, number] = [0, 0, 0]) => {
-    doc.setFontSize(fontSize);
-    doc.setFont('helvetica', isBold ? 'bold' : 'normal');
-    doc.setTextColor(color[0], color[1], color[2]);
+  // Fonction pour ajouter une ligne horizontale décorative
+  const addDecorativeLine = (color: [number, number, number] = [254, 198, 161]) => {
+    doc.setDrawColor(color[0], color[1], color[2]);
+    doc.setLineWidth(0.8);
+    doc.line(margin, yPosition, pageWidth - margin, yPosition);
+    yPosition += 8;
+  };
+
+  // Fonction pour ajouter un titre de section
+  const addSectionTitle = (title: string) => {
+    checkNewPage(25);
+    yPosition += 8;
     
-    const lines = doc.splitTextToSize(text, contentWidth);
-    const lineHeight = fontSize * 0.5;
+    // Ligne décorative avant le titre
+    doc.setFillColor(254, 198, 161);
+    doc.rect(margin, yPosition, 4, 8, 'F');
+    
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(80, 50, 30);
+    doc.text(title, margin + 10, yPosition + 6);
+    yPosition += 18;
+  };
+
+  // Fonction pour ajouter un sous-titre
+  const addSubTitle = (title: string) => {
+    checkNewPage(15);
+    yPosition += 5;
+    
+    doc.setFontSize(11);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(200, 120, 80);
+    doc.text(title, margin, yPosition);
+    yPosition += 10;
+  };
+
+  // Fonction pour ajouter du texte normal
+  const addParagraph = (text: string, indent: number = 0) => {
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(60, 60, 60);
+    
+    const lines = doc.splitTextToSize(text, contentWidth - indent);
     
     for (const line of lines) {
-      checkNewPage(lineHeight);
-      doc.text(line, margin, yPosition);
-      yPosition += lineHeight;
+      checkNewPage(7);
+      doc.text(line, margin + indent, yPosition);
+      yPosition += 6;
     }
+    yPosition += 3;
   };
 
-  // Fonction pour dessiner un rectangle de fond
-  const drawBackground = (height: number, color: [number, number, number]) => {
-    doc.setFillColor(color[0], color[1], color[2]);
-    doc.rect(margin - 5, yPosition - 5, contentWidth + 10, height, 'F');
+  // Fonction pour ajouter une puce
+  const addBulletPoint = (text: string) => {
+    checkNewPage(10);
+    
+    doc.setFillColor(254, 198, 161);
+    doc.circle(margin + 3, yPosition - 1.5, 1.5, 'F');
+    
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(60, 60, 60);
+    
+    const lines = doc.splitTextToSize(text, contentWidth - 12);
+    for (let i = 0; i < lines.length; i++) {
+      if (i > 0) checkNewPage(6);
+      doc.text(lines[i], margin + 10, yPosition);
+      yPosition += 6;
+    }
+    yPosition += 2;
   };
 
-  // === EN-TÊTE ===
-  // Fond coloré pour l'en-tête
-  doc.setFillColor(254, 198, 161); // Couleur warm-orange
-  doc.rect(0, 0, pageWidth, 50, 'F');
+  // === EN-TÊTE PRINCIPAL ===
+  // Grand fond coloré avec dégradé simulé
+  doc.setFillColor(254, 198, 161);
+  doc.rect(0, 0, pageWidth, 60, 'F');
+  
+  // Bande décorative plus foncée
+  doc.setFillColor(250, 180, 140);
+  doc.rect(0, 55, pageWidth, 5, 'F');
+  
+  // Logo/Icône décorative
+  doc.setFillColor(255, 255, 255);
+  doc.circle(pageWidth / 2, 18, 8, 'F');
+  doc.setFontSize(12);
+  doc.setFont('helvetica', 'bold');
+  doc.setTextColor(254, 198, 161);
+  doc.text('LA', pageWidth / 2, 21, { align: 'center' });
   
   // Titre principal
-  doc.setFontSize(24);
+  doc.setFontSize(22);
   doc.setFont('helvetica', 'bold');
   doc.setTextColor(80, 50, 30);
-  doc.text("Plan d'Apprentissage Personnalisé", pageWidth / 2, 25, { align: 'center' });
+  doc.text("PLAN D'APPRENTISSAGE", pageWidth / 2, 38, { align: 'center' });
   
   // Sous-titre avec la matière
-  doc.setFontSize(16);
+  doc.setFontSize(14);
   doc.setFont('helvetica', 'normal');
   doc.setTextColor(100, 70, 50);
-  doc.text(planData.subject, pageWidth / 2, 38, { align: 'center' });
+  doc.text(planData.subject.toUpperCase(), pageWidth / 2, 50, { align: 'center' });
   
-  yPosition = 65;
+  yPosition = 80;
 
-  // === INFORMATIONS DE BASE ===
-  drawBackground(35, [255, 250, 245]);
+  // === SECTION INFORMATIONS ===
+  addSectionTitle('Informations generales');
   
-  doc.setFontSize(14);
+  // Cadre pour les informations
+  doc.setFillColor(255, 252, 248);
+  doc.setDrawColor(254, 220, 200);
+  doc.setLineWidth(0.5);
+  doc.roundedRect(margin, yPosition - 5, contentWidth, 35, 3, 3, 'FD');
+  
+  const infoStartY = yPosition;
+  
+  // Niveau scolaire
+  doc.setFontSize(9);
   doc.setFont('helvetica', 'bold');
   doc.setTextColor(200, 120, 80);
-  doc.text('Informations de base', margin, yPosition);
-  yPosition += 10;
-  
-  doc.setFontSize(11);
+  doc.text('NIVEAU', margin + 10, infoStartY + 5);
   doc.setFont('helvetica', 'normal');
   doc.setTextColor(60, 60, 60);
+  doc.setFontSize(11);
+  doc.text(getSchoolLevelText(planData.schoolLevel), margin + 10, infoStartY + 13);
   
-  const infoText = [
-    `Niveau: ${getSchoolLevelText(planData.schoolLevel)}`,
-    `Âge: ${planData.age} ans`,
-    planData.averageGrade ? `Moyenne: ${planData.averageGrade}` : null
-  ].filter(Boolean).join('   |   ');
-  
-  doc.text(infoText, margin, yPosition);
-  yPosition += 20;
-
-  // === DIFFICULTÉS ===
-  if (planData.learningDifficulties) {
-    checkNewPage(30);
-    
-    doc.setFontSize(12);
-    doc.setFont('helvetica', 'bold');
-    doc.setTextColor(200, 120, 80);
-    doc.text("Difficultés d'apprentissage", margin, yPosition);
-    yPosition += 8;
-    
-    addText(cleanText(planData.learningDifficulties), 10, false, [80, 80, 80]);
-    yPosition += 10;
-  }
-
-  // === DEMANDES SPÉCIFIQUES ===
-  if (planData.specificRequests) {
-    checkNewPage(30);
-    
-    doc.setFontSize(12);
-    doc.setFont('helvetica', 'bold');
-    doc.setTextColor(200, 120, 80);
-    doc.text('Demandes spécifiques', margin, yPosition);
-    yPosition += 8;
-    
-    addText(cleanText(planData.specificRequests), 10, false, [80, 80, 80]);
-    yPosition += 10;
-  }
-
-  // === LIGNE DE SÉPARATION ===
-  checkNewPage(20);
-  doc.setDrawColor(230, 200, 180);
-  doc.setLineWidth(0.5);
-  doc.line(margin, yPosition, pageWidth - margin, yPosition);
-  yPosition += 15;
-
-  // === PLAN D'APPRENTISSAGE ===
-  doc.setFontSize(16);
+  // Âge
+  doc.setFontSize(9);
   doc.setFont('helvetica', 'bold');
   doc.setTextColor(200, 120, 80);
-  doc.text("Plan d'apprentissage", margin, yPosition);
-  yPosition += 12;
+  doc.text('AGE', margin + 60, infoStartY + 5);
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(60, 60, 60);
+  doc.setFontSize(11);
+  doc.text(`${planData.age} ans`, margin + 60, infoStartY + 13);
+  
+  // Moyenne (si disponible)
+  if (planData.averageGrade) {
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(200, 120, 80);
+    doc.text('MOYENNE', margin + 100, infoStartY + 5);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(60, 60, 60);
+    doc.setFontSize(11);
+    doc.text(planData.averageGrade, margin + 100, infoStartY + 13);
+  }
+  
+  yPosition = infoStartY + 40;
+
+  // === SECTION DIFFICULTÉS ===
+  if (planData.learningDifficulties && planData.learningDifficulties.trim()) {
+    addSectionTitle("Difficultes d'apprentissage");
+    addParagraph(cleanText(planData.learningDifficulties));
+    yPosition += 5;
+  }
+
+  // === SECTION DEMANDES SPÉCIFIQUES ===
+  if (planData.specificRequests && planData.specificRequests.trim()) {
+    addSectionTitle('Demandes specifiques');
+    addParagraph(cleanText(planData.specificRequests));
+    yPosition += 5;
+  }
+
+  // === SECTION PLAN D'APPRENTISSAGE ===
+  checkNewPage(30);
+  yPosition += 10;
+  
+  // Grande ligne de séparation avant le plan
+  doc.setFillColor(254, 198, 161);
+  doc.rect(margin, yPosition, contentWidth, 2, 'F');
+  yPosition += 15;
+  
+  // Titre du plan
+  doc.setFontSize(18);
+  doc.setFont('helvetica', 'bold');
+  doc.setTextColor(80, 50, 30);
+  doc.text("Votre Plan Personnalise", pageWidth / 2, yPosition, { align: 'center' });
+  yPosition += 15;
+  
+  addDecorativeLine();
+  yPosition += 5;
 
   if (planData.generatedPlan) {
     const cleanedPlan = cleanText(planData.generatedPlan);
-    const paragraphs = cleanedPlan.split('\n\n');
+    const sections = cleanedPlan.split('\n\n');
     
-    for (const paragraph of paragraphs) {
-      if (!paragraph.trim()) continue;
+    let currentWeekOrModule = '';
+    
+    for (const section of sections) {
+      if (!section.trim()) continue;
       
-      checkNewPage(15);
+      const lines = section.split('\n');
       
-      const lines = paragraph.split('\n');
       for (const line of lines) {
         if (!line.trim()) continue;
         
-        // Détecter si c'est un titre (commence par des caractères spéciaux ou est plus court)
-        const isTitle = line.length < 60 && (
-          line.startsWith('•') || 
-          /^\d+[\.\)]\s/.test(line) ||
-          line.toUpperCase() === line ||
-          line.endsWith(':')
-        );
+        const trimmedLine = line.trim();
         
-        if (isTitle) {
-          checkNewPage(12);
-          doc.setFontSize(11);
+        // Détecter les titres principaux (Semaine, Module, Partie, etc.)
+        if (/^(Semaine|Module|Partie|Chapitre|Phase|Etape|Jour)\s*\d*/i.test(trimmedLine) ||
+            /^\d+[\.\)]\s*[A-Z]/.test(trimmedLine)) {
+          checkNewPage(25);
+          yPosition += 8;
+          
+          // Cadre coloré pour les titres principaux
+          doc.setFillColor(255, 245, 235);
+          doc.setDrawColor(254, 198, 161);
+          doc.setLineWidth(0.5);
+          doc.roundedRect(margin, yPosition - 6, contentWidth, 12, 2, 2, 'FD');
+          
+          doc.setFontSize(12);
           doc.setFont('helvetica', 'bold');
-          doc.setTextColor(80, 60, 50);
+          doc.setTextColor(80, 50, 30);
+          doc.text(trimmedLine, margin + 5, yPosition + 2);
+          yPosition += 15;
+          currentWeekOrModule = trimmedLine;
+          
+        // Détecter les sous-titres (terminant par ":")
+        } else if (trimmedLine.endsWith(':') && trimmedLine.length < 80) {
+          addSubTitle(trimmedLine);
+          
+        // Détecter les puces
+        } else if (trimmedLine.startsWith('•') || trimmedLine.startsWith('-') || trimmedLine.startsWith('*')) {
+          const bulletText = trimmedLine.replace(/^[•\-\*]\s*/, '');
+          addBulletPoint(bulletText);
+          
+        // Détecter les listes numérotées
+        } else if (/^\d+[\.\)]\s/.test(trimmedLine)) {
+          checkNewPage(10);
+          
+          const match = trimmedLine.match(/^(\d+[\.\)])\s*(.*)$/);
+          if (match) {
+            doc.setFillColor(254, 198, 161);
+            doc.circle(margin + 5, yPosition - 1, 5, 'F');
+            
+            doc.setFontSize(9);
+            doc.setFont('helvetica', 'bold');
+            doc.setTextColor(255, 255, 255);
+            doc.text(match[1].replace(/[\.\)]/, ''), margin + 5, yPosition + 0.5, { align: 'center' });
+            
+            doc.setFontSize(10);
+            doc.setFont('helvetica', 'normal');
+            doc.setTextColor(60, 60, 60);
+            
+            const textLines = doc.splitTextToSize(match[2], contentWidth - 18);
+            for (let i = 0; i < textLines.length; i++) {
+              if (i > 0) checkNewPage(6);
+              doc.text(textLines[i], margin + 14, yPosition);
+              yPosition += 6;
+            }
+            yPosition += 3;
+          }
+          
+        // Texte normal
         } else {
-          doc.setFontSize(10);
-          doc.setFont('helvetica', 'normal');
-          doc.setTextColor(60, 60, 60);
-        }
-        
-        const textLines = doc.splitTextToSize(line, contentWidth);
-        for (const textLine of textLines) {
-          checkNewPage(6);
-          doc.text(textLine, margin, yPosition);
-          yPosition += 5;
+          addParagraph(trimmedLine);
         }
       }
-      yPosition += 3;
+      
+      // Espace entre les sections
+      yPosition += 5;
     }
   }
 
@@ -271,19 +386,28 @@ export const generatePDF = (planData: PlanData): void => {
   const totalPages = doc.getNumberOfPages();
   for (let i = 1; i <= totalPages; i++) {
     doc.setPage(i);
-    doc.setFontSize(8);
+    // Ligne de séparation du pied de page
+    doc.setDrawColor(254, 220, 200);
+    doc.setLineWidth(0.3);
+    doc.line(margin, pageHeight - 20, pageWidth - margin, pageHeight - 20);
+    
+    // Numéro de page
+    doc.setFontSize(9);
     doc.setFont('helvetica', 'normal');
     doc.setTextColor(150, 150, 150);
     doc.text(
-      `Page ${i} / ${totalPages}`,
+      `Page ${i} sur ${totalPages}`,
       pageWidth / 2,
-      pageHeight - 10,
+      pageHeight - 12,
       { align: 'center' }
     );
+    // Date et signature
+    doc.setFontSize(8);
+    doc.setTextColor(180, 180, 180);
     doc.text(
-      `Généré par LearnAI - ${new Date().toLocaleDateString('fr-FR')}`,
+      `Genere par LearnAI le ${new Date().toLocaleDateString('fr-FR')}`,
       pageWidth / 2,
-      pageHeight - 5,
+      pageHeight - 7,
       { align: 'center' }
     );
   }
