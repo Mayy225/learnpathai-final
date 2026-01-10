@@ -13,7 +13,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { toast } from "sonner";
 import Transition from '@/components/ui/Transition';
-
+import { generatePDF } from '@/lib/pdfGenerator';
 const GeneratedPlan = () => {
   const navigate = useNavigate();
   const { toast: toastHook } = useToast();
@@ -103,22 +103,27 @@ const GeneratedPlan = () => {
 
   // Fonction pour télécharger le plan au format PDF
   const handleDownloadPDF = () => {
-    // Ici, nous simulons un téléchargement
     toastHook({
       title: "Téléchargement du PDF",
-      description: "Le téléchargement de votre plan d'apprentissage va commencer...",
+      description: "Génération de votre plan d'apprentissage en cours...",
     });
 
-    // Dans une application réelle, on génèrerait un PDF avec la bibliothèque jsPDF ou similaire
-    setTimeout(() => {
-      const element = document.createElement('a');
-      element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(parsedPlan || 'Plan non disponible'));
-      element.setAttribute('download', `Plan_Apprentissage_${currentPlan.subject}.txt`);
-      element.style.display = 'none';
-      document.body.appendChild(element);
-      element.click();
-      document.body.removeChild(element);
-    }, 1000);
+    try {
+      generatePDF({
+        subject: currentPlan.subject,
+        schoolLevel: currentPlan.schoolLevel,
+        age: currentPlan.age,
+        averageGrade: currentPlan.averageGrade,
+        learningDifficulties: currentPlan.learningDifficulties,
+        specificRequests: currentPlan.specificRequests,
+        generatedPlan: parsedPlan || currentPlan.generatedPlan
+      });
+      
+      toast.success("PDF téléchargé avec succès!");
+    } catch (error) {
+      console.error("Erreur lors de la génération du PDF:", error);
+      toast.error("Erreur lors de la génération du PDF");
+    }
   };
 
   // Fonction pour sauvegarder le plan
