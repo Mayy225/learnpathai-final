@@ -331,70 +331,38 @@ const FocusMode = () => {
                     <div className={`absolute inset-0 rounded-full ${isActive ? 'animate-pulse' : ''}`} style={{
                       background: 'radial-gradient(circle, rgba(251,191,36,0.15) 0%, transparent 70%)',
                     }}></div>
-                    <svg className="transform -rotate-90 w-48 h-48 sm:w-64 sm:h-64 md:w-72 md:h-72">
+
+                    <svg
+                      viewBox="0 0 200 200"
+                      className="w-48 h-48 sm:w-64 sm:h-64 md:w-72 md:h-72 mx-auto -rotate-90"
+                    >
+                      {/* Cercle de fond */}
                       <circle
-                        cx="96"
-                        cy="96"
-                        r="85"
-                        stroke="currentColor"
-                        strokeWidth="8"
-                        fill="transparent"
-                        className="text-gray-200 sm:hidden"
-                      />
-                      <circle
-                        cx="96"
-                        cy="96"
-                        r="85"
-                        stroke="url(#gradient)"
-                        strokeWidth="8"
-                        fill="transparent"
-                        strokeDasharray={`${2 * Math.PI * 85}`}
-                        strokeDashoffset={`${2 * Math.PI * 85 * (1 - getProgress() / 100)}`}
-                        style={{ transition: 'stroke-dashoffset 1s linear' }}
-                        className="sm:hidden"
-                      />
-                      <circle
-                        cx="128"
-                        cy="128"
-                        r="115"
+                        cx="100"
+                        cy="100"
+                        r="90"
                         stroke="currentColor"
                         strokeWidth="10"
                         fill="transparent"
-                        className="text-gray-200 hidden sm:block md:hidden"
+                        className="text-gray-200"
                       />
+
+                      {/* Cercle de progression */}
                       <circle
-                        cx="128"
-                        cy="128"
-                        r="115"
+                        cx="100"
+                        cy="100"
+                        r="90"
                         stroke="url(#gradient)"
                         strokeWidth="10"
                         fill="transparent"
-                        strokeDasharray={`${2 * Math.PI * 115}`}
-                        strokeDashoffset={`${2 * Math.PI * 115 * (1 - getProgress() / 100)}`}
-                        style={{ transition: 'stroke-dashoffset 1s linear' }}
-                        className="hidden sm:block md:hidden"
-                      />
-                      <circle
-                        cx="144"
-                        cy="144"
-                        r="130"
-                        stroke="currentColor"
-                        strokeWidth="10"
-                        fill="transparent"
-                        className="text-gray-200 hidden md:block"
-                      />
-                      <circle
-                        cx="144"
-                        cy="144"
-                        r="130"
-                        stroke="url(#gradient)"
-                        strokeWidth="10"
-                        fill="transparent"
-                        strokeDasharray={`${2 * Math.PI * 130}`}
-                        strokeDashoffset={`${2 * Math.PI * 130 * (1 - getProgress() / 100)}`}
-                        className="transition-all duration-1000 ease-linear drop-shadow-lg"
+                        strokeDasharray={2 * Math.PI * 90}
+                        strokeDashoffset={
+                          2 * Math.PI * 90 * (1 - getProgress() / 100)
+                        }
                         strokeLinecap="round"
+                        className="transition-all duration-1000 ease-linear"
                       />
+
                       <defs>
                         <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
                           <stop offset="0%" stopColor="hsl(var(--warm-yellow))" />
