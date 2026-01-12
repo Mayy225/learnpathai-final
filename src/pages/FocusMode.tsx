@@ -328,9 +328,7 @@ const FocusMode = () => {
               <div className="bg-white/60 backdrop-blur-xl rounded-3xl shadow-[0_8px_32px_rgba(251,146,60,0.15)] p-6 sm:p-8 md:p-12 mb-6 sm:mb-8 border border-white/40">
                 <div className="text-center">
                   <div className="relative w-48 h-48 sm:w-64 sm:h-64 md:w-72 md:h-72 mx-auto mb-6 sm:mb-8 md:mb-10">
-                    <div className={`absolute inset-0 rounded-full ${isActive ? 'animate-pulse' : ''}`} style={{
-                      background: 'radial-gradient(circle, rgba(251,191,36,0.15) 0%, transparent 70%)',
-                    }}></div>
+                    
 
                     <svg
                       viewBox="0 0 200 200"
